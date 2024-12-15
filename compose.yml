@@ -3,8 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    env_file:
+      - .env
     ports:
       - "3000:3000"
+    networks:
+      - levi-sphere
+    depends_on:
+      database:
+        condition: service_healthy
     develop:
       watch:
         - action: sync
@@ -16,4 +23,29 @@ services:
           path: package.json
         - action: rebuild
           path: bun.lockb
+  database:
+    image: postgres:17
+    container_name: db-levi-sphere
+    platform: linux/x86_64
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: levi-sphere
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d levi-sphere'"]
+      timeout: 10s
+      retries: 5
+    volumes:
+      - pg:/var/lib/postgresql/data
+    networks:
+      - levi-sphere
+
+networks:
+  levi-sphere:
+    driver: bridge
+
+volumes:
+  pg:
 

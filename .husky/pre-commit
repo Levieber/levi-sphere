@@ -1,1 +1,3 @@
-lint-staged
+bunx --bun lint-staged
+bunx --bun tsc --noEmit
+bunx --bun knip

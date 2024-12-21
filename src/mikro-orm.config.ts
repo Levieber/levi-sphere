@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { defineConfig } from "@mikro-orm/postgresql";
 import { Migrator, TSMigrationGenerator } from "@mikro-orm/migrations";
 
